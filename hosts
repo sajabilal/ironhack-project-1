@@ -1,0 +1,16 @@
+[frontend]
+
+frontend-instance-1
+
+[backend]
+
+backend-instance-1
+
+[database]
+
+db-instance-1 ansible_python_interpreter=/usr/bin/python3.9 
+
+[database:vars]
+db_user=myuser
+db_pass=mypass
+db_name=mydb

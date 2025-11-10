@@ -1,0 +1,117 @@
+---
+- name: install docker on all servers
+  hosts: all
+  become: true
+  tasks:
+    - name: Install the latest version of docker
+      ansible.builtin.dnf:
+        name: docker
+        state: latest
+        lock_timeout: 300
+
+    - name: Start service docker, if not started
+      ansible.builtin.service:
+        name: docker
+        state: started
+
+- name: pull docker app image on frontend server
+  hosts: frontend
+  become: true
+  tasks:
+    - name: pull docker vote-app image
+      community.docker.docker_image:
+        name: saja123/voting-app
+        tag: latest
+        source: pull
+    - name: start docker vote-app container
+      community.docker.docker_container:
+         image: saja123/voting-app:latest
+         name: saja123-voting-app-container
+         published_ports:
+           - "80:80"
+         env: 
+           REDIS_HOST: "10.0.10.241"
+           REDIS_PORT: "6379"
+         state: started
+
+    - name: pull docker result-app image
+      community.docker.docker_image:
+        name: saja123/result-app
+        tag: latest
+        source: pull
+    - name: start docker result-app container
+      community.docker.docker_container:
+         image: saja123/result-app:latest
+         name: saja123-result-app-container
+         published_ports:
+           - "81:80" 
+         env:
+           PG_HOST: "10.0.10.119"
+           DB_USER: "postgres"
+           DB_PASSWORD: "postgres"
+           PG_DATABASE: "db"
+
+- name: pull docker app and redis image on backend server
+  hosts: backend
+  become: true
+  tasks:
+    - name: pull docker redis image
+      community.docker.docker_image:
+        name: redis
+        tag: latest
+        source: pull
+    - name: start docker redis container
+      community.docker.docker_container:
+         image: redis:latest
+         name: redis-container
+         ports: 
+           - "6379:6379"
+         networks:
+           - name: my_shared_network
+    - name: Create a Docker network
+      community.docker.docker_network:
+        name: my_shared_network
+        state: present
+    - name: pull docker worker-app image
+      community.docker.docker_image:
+        name: saja123/worker-app
+        tag: latest
+        source: pull
+    - name: start docker worker-app container
+      community.docker.docker_container:
+         image: saja123/worker-app:latest
+         name: saja123-worker-app-container
+         env: 
+           REDIS_HOST: "redis-container"
+           REDIS_PORT: "6379"
+           DB_HOST: "10.0.10.119"
+           DB_USER: "postgres"
+           DB_PASSWORD: "postgres"
+           DB_NAME: "db"
+         networks:
+           - name: my_shared_network
+
+- name: pull docker postgresql image on db server
+  hosts: database
+  become: true
+  tasks:
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: pip
+        state: latest
+    - name: pull docker postgresql image
+      community.docker.docker_image:
+        name: postgres
+        tag: 17.6-bookworm
+        source: pull
+    - name: start docker postgresql container
+      community.docker.docker_container:
+         image: postgres:17.6-bookworm
+         name: postgres-container
+         ports: 
+           - "5432:5432"
+         env:
+           POSTGRES_USER: postgres
+           POSTGRES_PASSWORD: postgres
+           POSTGRES_DB: "db"
+         state: started
