@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: result-pod
+  namespace: demo-saja
+  labels:
+    app: result-pod
+spec:
+  containers:
+    - name: results-container
+      image: saja123/result-app:latest
+      env:
+        - name: PG_HOST
+          value: "postgresql-service"
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "postgres"
+        - name: PG_DATABASE
+          value: "db"
+      ports:
+        - containerPort: 80

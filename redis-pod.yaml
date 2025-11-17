@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-pod
+  namespace: demo-saja
+  labels:
+    app: redis-pod
+spec:
+  containers:
+    - name: redis-container
+      image: redis:latest
+      ports:
+        - containerPort: 6379

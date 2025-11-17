@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgresql-pod
+  namespace: demo-saja
+  labels:
+    app: postgresql-pod
+spec:
+  containers:
+    - name: postgresql-container
+      image: postgres:17.6-bookworm
+      ports:
+        - containerPort: 5432
+      env:
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "db"
