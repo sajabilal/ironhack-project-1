@@ -48,5 +48,4 @@ jobs:
           kubectl apply -f result-pod.yaml
           kubectl apply -f result-service.yaml
           kubectl apply -f worker-pod.yaml
-          kubectl apply -f nginx-saja.yaml
           kubectl apply -f ingress.yaml
