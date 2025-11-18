@@ -10,6 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Debug AWS secrets length
+        run: |
+          echo "AWS_ACCESS_KEY_ID length:"
+          echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | wc -c
+          echo "AWS_SECRET_ACCESS_KEY length:"
+          echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}" | wc -c
+
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
