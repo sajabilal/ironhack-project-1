@@ -35,4 +35,4 @@ jobs:
         run: eksctl utils write-kubeconfig --cluster ironhack-main --region us-east-2
 
       - name: Apply Kubernetes Manifests
-        run: kubectl apply -f K8s/
+        run: kubectl apply -f ironhack-project-1/
