@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Debug AWS secrets length
         run: |
           echo "AWS_ACCESS_KEY_ID length:"
