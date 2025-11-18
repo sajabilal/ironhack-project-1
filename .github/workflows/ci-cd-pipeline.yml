@@ -35,4 +35,15 @@ jobs:
         run: eksctl utils write-kubeconfig --cluster ironhack-main --region us-east-2
 
       - name: Apply Kubernetes Manifests
-        run: kubectl apply -f .
+        run: |
+          kubectl apply -f postgresql-pod.yaml
+          kubectl apply -f postgresql-service.yaml
+          kubectl apply -f redis-pod.yaml
+          kubectl apply -f redis-service.yaml
+          kubectl apply -f vote-pod.yaml
+          kubectl apply -f vote-service.yaml
+          kubectl apply -f result-pod.yaml
+          kubectl apply -f result-service.yaml
+          kubectl apply -f worker-pod.yaml
+          kubectl apply -f nginx-saja.yaml
+          kubectl apply -f ingress.yaml
