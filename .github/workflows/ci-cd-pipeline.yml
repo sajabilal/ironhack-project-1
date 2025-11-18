@@ -1,3 +1,10 @@
+name: CI/CD to EKS (Docker Hub + buildx)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
 - name: Configure AWS Credentials
   uses: aws-actions/configure-aws-credentials@v1
   with:
